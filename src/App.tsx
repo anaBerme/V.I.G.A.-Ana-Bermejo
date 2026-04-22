@@ -60,9 +60,11 @@ export default function App() {
         { role: 'user', parts: [{ text: userMessage }] },
         { role: 'model', parts: [{ text: data.reply }] }
       ]);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      const errorNarrativo = `[ERROR DE SISTEMA: ALARMA SÍSMICA 🚨] \n¡Aaaah! ¡Hay un fallo de conexión en mis sensores! No consigo procesar tu informe arquitectónico. Revisa tus planos (conexión a internet) e inténtalo de nuevo antes de que nos derrumbemos.`;
+      const isDev = window.location.hostname === 'localhost' || window.location.hostname.includes('run.app');
+      const details = error.message ? `\n\n[Detalles técnicos: ${error.message}]` : '';
+      const errorNarrativo = `[ERROR DE SISTEMA: ALARMA SÍSMICA 🚨] \n¡Aaaah! ¡Hay un fallo de conexión en mis sensores! No consigo procesar tu informe arquitectónico. Revisa tus planos (conexión a internet) e inténtalo de nuevo antes de que nos derrumbemos.${isDev ? details : ''}`;
       setMessages(prev => [...prev, { role: 'bot', text: errorNarrativo, isError: true }]);
     } finally {
       setIsLoading(false);
