@@ -22,8 +22,8 @@ export default async function handler(req: any, res: any) {
   try {
     const { history, message } = req.body;
       
-    let apiKeyRaw = process.env.GEMINI_API_KEY;
-
+    //let apiKeyRaw = process.env.GEMINI_API_KEY;
+     let apiKeyRaw = "AIzaSyBGB2jg3MBmrpga5oEJHHKvaj_q8p2v37Q";
     
     // Saneamiento proactivo: Vercel a veces introduce comillas si el usuario las pega por error
     const apiKey = apiKeyRaw ? apiKeyRaw.trim().replace(/^["']|["']$/g, '') : undefined;
