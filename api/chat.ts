@@ -22,9 +22,14 @@ export default async function handler(req: any, res: any) {
   try {
     const { history, message } = req.body;
       
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is missing.");
+    let apiKeyRaw = process.env.GEMINI_API_KEY;
+
+    
+    // Saneamiento proactivo: Vercel a veces introduce comillas si el usuario las pega por error
+    const apiKey = apiKeyRaw ? apiKeyRaw.trim().replace(/^["']|["']$/g, '') : undefined;
+    
+    if (!apiKey || apiKey === "undefined" || apiKey.includes('MY_GEMINI_API_KEY') || apiKey === '') {
+      throw new Error("No se ha encontrado una API Key de Gemini válida. Entra en los Ajustes (Secrets) y añade tu clave real.");
     }
 
     const ai = new GoogleGenAI({ apiKey });

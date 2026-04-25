@@ -47,12 +47,18 @@ export default function App() {
         body: JSON.stringify({ message: userMessage, history })
       });
 
-      if (!response.ok) {
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      if (data.error) throw new Error(data.error);
+      if (!response.ok) {
+        throw new Error(data.details || data.error || `HTTP error! status: ${response.status}`);
+      }
+      
+      if (data.error) throw new Error(data.details || data.error);
 
       setMessages(prev => [...prev, { role: 'bot', text: data.reply }]);
       setHistory(prev => [
@@ -62,9 +68,8 @@ export default function App() {
       ]);
     } catch (error: any) {
       console.error(error);
-      const isDev = window.location.hostname === 'localhost' || window.location.hostname.includes('run.app');
       const details = error.message ? `\n\n[Detalles técnicos: ${error.message}]` : '';
-      const errorNarrativo = `[ERROR DE SISTEMA: ALARMA SÍSMICA 🚨] \n¡Aaaah! ¡Hay un fallo de conexión en mis sensores! No consigo procesar tu informe arquitectónico. Revisa tus planos (conexión a internet) e inténtalo de nuevo antes de que nos derrumbemos.${isDev ? details : ''}`;
+      const errorNarrativo = `[ERROR DE SISTEMA: ALARMA SÍSMICA 🚨] \n¡Aaaah! ¡Hay un fallo de conexión en mis sensores! No consigo procesar tu informe arquitectónico. Revisa tus planos (conexión a internet) e inténtalo de nuevo antes de que nos derrumbemos.${details}`;
       setMessages(prev => [...prev, { role: 'bot', text: errorNarrativo, isError: true }]);
     } finally {
       setIsLoading(false);
