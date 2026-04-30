@@ -13,12 +13,12 @@
 
 #chat-container {
     scrollbar-width: thin;
-    scrollbar-color: #3f3f46 transparent;
+    scrollbar-color: #d6c097 transparent;
 }
 #chat-container::-webkit-scrollbar {
     width: 6px;
 }
 #chat-container::-webkit-scrollbar-thumb {
-    background-color: #3f3f46;
+    background-color: #d6c097;
     border-radius: 10px;
 }
